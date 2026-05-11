@@ -100,7 +100,7 @@
  
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="auth.js"></script>
   <script src="lang.js"></script>
   <script src="script.js"></script>
@@ -221,16 +221,27 @@
     showToast(isAr ? 'حجم الصورة يجب أن يكون أقل من 2MB!' : 'Image must be less than 2MB!', 'error');
     return;
   }
-  const user = getCurrentUser();
-  const storageRef = firebase.storage().ref('avatars/' + user.id + '_' + Date.now());
   showToast(isAr ? 'جاري رفع الصورة...' : 'Uploading photo...', 'success');
-  storageRef.put(file).then(snapshot => snapshot.ref.getDownloadURL()).then(url => {
-    selectedEditAvatar = url;
-    document.getElementById('editSelectedAvatar').src = url;
-    showToast(isAr ? 'تم رفع الصورة! ✅' : 'Avatar uploaded! ✅', 'success');
-  }).catch(() => {
-    showToast(isAr ? 'فشل رفع الصورة!' : 'Upload failed!', 'error');
-  });
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const base64 = e.target.result.split(',')[1];
+    const formData = new FormData();
+    formData.append('key', atob('MDJlYWZhNDJlZjkyNDliNjUyMjQxMzQ5NzJiMzUwNDU='));
+    formData.append('image', base64);
+    fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          selectedEditAvatar = data.data.url;
+          document.getElementById('editSelectedAvatar').src = data.data.url;
+          showToast(isAr ? 'تم رفع الصورة! ✅' : 'Avatar uploaded! ✅', 'success');
+        } else {
+          showToast(isAr ? 'فشل رفع الصورة!' : 'Upload failed!', 'error');
+        }
+      })
+      .catch(() => showToast(isAr ? 'فشل رفع الصورة!' : 'Upload failed!', 'error'));
+  };
+  reader.readAsDataURL(file);
 }
  
     function showAccountTab(tab, btn) {
