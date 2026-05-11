@@ -100,6 +100,7 @@
  
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="auth.js"></script>
   <script src="lang.js"></script>
   <script src="script.js"></script>
@@ -213,21 +214,24 @@
     }
  
     function handleEditAvatarUpload(input) {
-      const file = input.files[0];
-      const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
-      if (!file) return;
-      if (file.size > 2 * 1024 * 1024) {
-        showToast(isAr ? 'حجم الصورة يجب أن يكون أقل من 2MB!' : 'Image must be less than 2MB!', 'error');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        selectedEditAvatar = e.target.result;
-        document.getElementById('editSelectedAvatar').src = selectedEditAvatar;
-        showToast(isAr ? 'تم رفع الصورة! ✅' : 'Avatar uploaded! ✅', 'success');
-      };
-      reader.readAsDataURL(file);
-    }
+  const file = input.files[0];
+  const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showToast(isAr ? 'حجم الصورة يجب أن يكون أقل من 2MB!' : 'Image must be less than 2MB!', 'error');
+    return;
+  }
+  const user = getCurrentUser();
+  const storageRef = firebase.storage().ref('avatars/' + user.id + '_' + Date.now());
+  showToast(isAr ? 'جاري رفع الصورة...' : 'Uploading photo...', 'success');
+  storageRef.put(file).then(snapshot => snapshot.ref.getDownloadURL()).then(url => {
+    selectedEditAvatar = url;
+    document.getElementById('editSelectedAvatar').src = url;
+    showToast(isAr ? 'تم رفع الصورة! ✅' : 'Avatar uploaded! ✅', 'success');
+  }).catch(() => {
+    showToast(isAr ? 'فشل رفع الصورة!' : 'Upload failed!', 'error');
+  });
+}
  
     function showAccountTab(tab, btn) {
       document.querySelectorAll('.account-tab-content').forEach(t => t.classList.remove('active'));
