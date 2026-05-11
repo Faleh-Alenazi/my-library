@@ -8,9 +8,9 @@ const firebaseConfig = {
   appId: "1:197956845152:web:a884e2ef91a0ae604f0d05"
 };
  
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
  
 // ===== IN-MEMORY CACHE =====
 let _books = [];
@@ -81,14 +81,14 @@ function saveAuthors(authors) {
 function getUsers() {
   return _users;
 }
-function saveUsers(users) {
+async function saveUsers(users) {
   _users = users;
   // Strip large base64 avatars before saving to Firestore (1MB doc limit)
   const cleanUsers = users.map(u => ({
     ...u,
     avatar: u.avatar || ''
   }));
-  db.collection('data').doc('users').set({ items: cleanUsers })
+  return db.collection('data').doc('users').set({ items: cleanUsers })
     .catch(e => console.error('Save users error:', e));
 }
  
@@ -115,7 +115,7 @@ function logoutAdmin() {
 }
  
 // ===== USER SIGNUP =====
-function signupUser(username, email, password, avatar, dob) {
+async function signupUser(username, email, password, avatar, dob) {
   const users = getUsers();
   if (users.find(u => u.email === email)) return { success: false, message: 'Email already exists!' };
   if (users.find(u => u.username === username)) return { success: false, message: 'Username already taken!' };
@@ -131,7 +131,7 @@ function signupUser(username, email, password, avatar, dob) {
     banned: false
   };
   users.push(newUser);
-  saveUsers(users);
+  await saveUsers(users);
   setCurrentUser(newUser);
   return { success: true };
 }
