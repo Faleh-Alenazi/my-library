@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..." autocomplete="off"/>
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+ 
+    <!-- HERO SECTION -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <div class="hero-badge" data-lang="hero-badge">✨ Your Personal Library</div>
+        <h1 data-lang="hero-title">Discover Your Next<br/><span>Favorite Book</span></h1>
+        <p data-lang="hero-subtitle">Thousands of carefully curated books, handpicked for every reader. Find your story, download and enjoy.</p>
+        <div class="hero-btns">
+          <a href="books.html" class="btn btn-primary"><i class="fas fa-book-open"></i> <span data-lang="hero-explore">Explore Books</span></a>
+          <a href="ai.html" class="btn btn-outline"><i class="fas fa-robot"></i> <span data-lang="hero-ai">Ask AI Assistant</span></a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span id="totalBooksCount">0</span>
+            <p data-lang="hero-stat-books">Books</p>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span id="totalAuthorsCount">0</span>
+            <p data-lang="hero-stat-authors">Authors</p>
+          </div>
+          <div class="hero-stat-divider"></div>
+          <div class="hero-stat">
+            <span>Free</span>
+            <p data-lang="hero-stat-downloads">Downloads</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="hero-books-display">
+          <div class="floating-book book1">📖</div>
+          <div class="floating-book book2">📕</div>
+          <div class="floating-book book3">📗</div>
+          <div class="floating-book book4">📘</div>
+          <div class="hero-circle"></div>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- CATEGORIES SECTION -->
+    <section class="categories-section">
+      <div class="container">
+        <h2 class="section-title" data-lang="cat-title">Browse by Genre</h2>
+        <p class="section-subtitle" data-lang="cat-subtitle">Find exactly what you're in the mood for</p>
+        <div class="categories-grid" id="categoriesGrid"></div>
+      </div>
+    </section>
+ 
+    <!-- FEATURED BOOKS -->
+    <section class="featured-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" data-lang="featured-title-en">English Featured Books</h2>
+            <p class="section-subtitle" data-lang="featured-subtitle">Handpicked by our librarians</p>
+          </div>
+          <a href="books.html?featured=english" class="btn btn-outline" data-lang="featured-viewall">View All</a>
+        </div>
+        <div class="books-grid" id="featuredBooks">
+          <div class="empty-state">
+            <div class="empty-state-icon">📚</div>
+            <h3>No books yet</h3>
+            <p>Check back soon for featured books!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ARABIC FEATURED BOOKS -->
+      <section class="featured-section">
+        <div class="container">
+        <div class="section-header">
+        <div>
+          <h2 class="section-title" data-lang="featured-title-ar">Arabic Featured Books</h2>
+            <p class="section-subtitle" data-lang="featured-subtitle-ar">Selected Arabic literature</p>
+        </div>
+            <a href="books.html?featured=arabic" class="btn btn-outline" data-lang="featured-viewall">View All</a>
+        </div>
+          <div class="books-grid" id="featuredBooksArabic">
+          <div class="empty-state">
+          <div class="empty-state-icon">📚</div>
+            <h3>No Arabic books yet</h3>
+            <p>Check back soon!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+ 
+    <!-- HOW IT WORKS -->
+    <section class="how-section">
+      <div class="container">
+        <h2 class="section-title" style="text-align:center" data-lang="how-title">How It Works</h2>
+        <p class="section-subtitle" style="text-align:center" data-lang="how-subtitle">Three simple steps to your next great read</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-icon">🔍</div>
+            <div class="step-number">01</div>
+            <h3 data-lang="how-step1-title">Browse & Search</h3>
+            <p data-lang="how-step1-desc">Explore our curated collection or search for a specific title or author</p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">👤</div>
+            <div class="step-number">02</div>
+            <h3 data-lang="how-step2-title">Create Account</h3>
+            <p data-lang="how-step2-desc">Sign up for free to unlock full access to all downloads</p>
+          </div>
+          <div class="step-card">
+            <div class="step-icon">⬇️</div>
+            <div class="step-number">03</div>
+            <h3 data-lang="how-step3-title">Download & Enjoy</h3>
+            <p data-lang="how-step3-desc">Download your chosen books as PDF and enjoy reading anywhere</p>
+          </div>
+        </div>
+      </div>
+    </section>
+ 
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls">
+      <a href="admin.html#add-book" class="admin-footer-btn"><i class="fas fa-plus"></i> <span data-lang="admin-addbook">Add Book</span></a>
+      <a href="admin.html#manage-books" class="admin-footer-btn"><i class="fas fa-edit"></i> <span data-lang="admin-editbooks">Edit/Delete Books</span></a>
+      <a href="admin.html#add-author" class="admin-footer-btn"><i class="fas fa-user-plus"></i> <span data-lang="admin-addauthor">Add Author</span></a>
+      <a href="admin.html#manage-authors" class="admin-footer-btn"><i class="fas fa-users"></i> <span data-lang="admin-editauthors">Edit/Delete Authors</span></a>
+      <a href="admin.html#manage-users" class="admin-footer-btn"><i class="fas fa-users-cog"></i> <span data-lang="admin-manageusers">Manage Users</span></a>
+      <a href="admin.html#stats" class="admin-footer-btn"><i class="fas fa-chart-bar"></i> <span data-lang="admin-stats">Stats</span></a>
+      <a class="admin-footer-btn danger" onclick="handleAdminLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="admin-logout">Admin Logout</span></a>
+    </div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library. Discover, read, and download books curated just for you.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+        <a href="signup.html" data-lang="footer-signup">Sign Up</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+        <a href="account.html" data-lang="nav-myaccount">My Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <!-- BACK TO TOP -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const navSearchInput = document.getElementById('navSearch');
+    const searchDropdown = document.getElementById('searchDropdown');
+ 
+    navSearchInput.addEventListener('input', function() {
+      const query = this.value.trim().toLowerCase();
+      if (query.length < 2) {
+        searchDropdown.classList.remove('active');
+        return;
+      }
+      const books = getBooks();
+      const filtered = books.filter(b => b.title.toLowerCase().startsWith(query)).slice(0, 8);
+      if (filtered.length === 0) {
+        searchDropdown.innerHTML = '<div class="search-no-results">No books found</div>';
+      } else {
+        searchDropdown.innerHTML = filtered.map(b => `
+          <a class="search-dropdown-item" href="book-detail.html?id=${b.id}">
+            <img src="${b.cover || 'https://via.placeholder.com/38x52?text=📖'}" alt="${b.title}" onerror="this.src='https://via.placeholder.com/38x52?text=📖'"/>
+            <span>${b.title}</span>
+          </a>
+        `).join('');
+      }
+      searchDropdown.classList.add('active');
+    });
+ 
+    document.addEventListener('click', function(e) {
+      if (!navSearchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+        searchDropdown.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>

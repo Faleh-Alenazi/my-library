@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Books — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" class="active" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+ 
+    <!-- BOOKS HEADER -->
+    <div class="books-header">
+      <div class="container">
+        <h1 class="section-title" data-lang="books-title">📚 Our Library</h1>
+        <p class="section-subtitle" data-lang="books-subtitle">Browse our curated collection of books</p>
+ 
+        <!-- FILTERS -->
+        <div class="books-filters">
+          <div class="filter-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="booksSearch" placeholder="Search by title or author..." data-lang-placeholder="books-search-placeholder"/>
+          </div>
+          <select id="categoryFilter">
+            <option value="" data-lang="books-all-categories">All Categories</option>
+          </select>
+          <select id="langFilter">
+            <option value="">All Languages</option>
+            <option value="english">English</option>
+            <option value="arabic">Arabic</option>
+          </select>
+          <select id="sortFilter">
+            <option value="newest" data-lang="books-sort-newest">Newest First</option>
+            <option value="oldest" data-lang="books-sort-oldest">Oldest First</option>
+            <option value="az" data-lang="books-sort-az">A — Z</option>
+            <option value="za" data-lang="books-sort-za">Z — A</option>
+            <option value="downloads" data-lang="books-sort-downloads">Most Downloaded</option>
+          </select>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- BOOKS CONTENT -->
+    <div class="books-content">
+      <div class="container">
+        <div class="books-results-header">
+          <p id="booksCount">Loading...</p>
+        </div>
+        <div class="books-grid" id="booksGrid">
+          <div class="loading-spinner"><div class="spinner"></div></div>
+        </div>
+        <div id="emptyState" style="display:none">
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <h3 data-lang="books-empty-title">No books found</h3>
+            <p data-lang="books-empty-desc">Try a different search or category</p>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls">
+      <a href="admin.html#add-book" class="admin-footer-btn"><i class="fas fa-plus"></i> <span data-lang="admin-addbook">Add Book</span></a>
+      <a href="admin.html#manage-books" class="admin-footer-btn"><i class="fas fa-edit"></i> <span data-lang="admin-editbooks">Edit/Delete Books</span></a>
+      <a href="admin.html#add-author" class="admin-footer-btn"><i class="fas fa-user-plus"></i> <span data-lang="admin-addauthor">Add Author</span></a>
+      <a href="admin.html#manage-authors" class="admin-footer-btn"><i class="fas fa-users"></i> <span data-lang="admin-editauthors">Edit/Delete Authors</span></a>
+      <a href="admin.html#manage-users" class="admin-footer-btn"><i class="fas fa-users-cog"></i> <span data-lang="admin-manageusers">Manage Users</span></a>
+      <a class="admin-footer-btn danger" onclick="handleAdminLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="admin-logout">Admin Logout</span></a>
+    </div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+        <a href="account.html" data-lang="nav-myaccount">My Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const bookCategories = [
+      'Fiction','Mystery','Romance','Science Fiction','Horror','Adventure',
+      'Fantasy','History','Biography','Philosophy','Self-Help','Poetry',
+      'Drama','Comedy','Crime','Thriller','Classic','Science','Politics',
+      'Art','Travel','Cooking','Psychology','Religion','Children','Business',
+      'Health','Sports','Music','Technology'
+    ];
+ 
+    let allBooks = [];
+    let filteredBooks = [];
+ 
+    function initBooksPage() {
+      const catFilter = document.getElementById('categoryFilter');
+      bookCategories.forEach(c => {
+        catFilter.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+ 
+      const params = new URLSearchParams(window.location.search);
+      const searchParam = params.get('search');
+      const categoryParam = params.get('category');
+      const featuredParam = params.get('featured');
+ 
+      if (searchParam) {
+        document.getElementById('booksSearch').value = searchParam;
+        document.getElementById('navSearch').value = searchParam;
+      }
+      if (categoryParam) {
+        catFilter.value = categoryParam;
+      }
+      loadBooks();
+
+      if (featuredParam) {
+        document.getElementById('langFilter').value = featuredParam;
+        filterBooks();
+      }
+ 
+      document.getElementById('booksSearch').addEventListener('input', filterBooks);
+      document.getElementById('categoryFilter').addEventListener('change', filterBooks);
+      document.getElementById('sortFilter').addEventListener('change', filterBooks);
+      document.getElementById('langFilter').addEventListener('change', filterBooks);
+    }
+ 
+    function loadBooks() {
+      allBooks = getBooks();
+      filterBooks();
+    }
+ 
+    function filterBooks() {
+      const search = document.getElementById('booksSearch').value.toLowerCase();
+      const category = document.getElementById('categoryFilter').value;
+      const sort = document.getElementById('sortFilter').value;
+      const lang = document.getElementById('langFilter').value;
+ 
+      filteredBooks = allBooks.filter(book => {
+        const matchSearch = !search ||
+          book.title.toLowerCase().includes(search) ||
+          book.authorName.toLowerCase().includes(search);
+        const matchCategory = !category || book.category === category;
+        const matchLang = !lang || book.featured === lang;
+        return matchSearch && matchCategory && matchLang;
+      });
+ 
+      filteredBooks.sort((a, b) => {
+        if (sort === 'az') return a.title.localeCompare(b.title);
+        if (sort === 'za') return b.title.localeCompare(a.title);
+        if (sort === 'downloads') return (b.downloads || 0) - (a.downloads || 0);
+        if (sort === 'oldest') return a.id - b.id;
+        return b.id - a.id;
+      });
+ 
+      renderBooks();
+    }
+ 
+    function renderBooks() {
+      const grid = document.getElementById('booksGrid');
+      const emptyState = document.getElementById('emptyState');
+      const count = document.getElementById('booksCount');
+ 
+      count.textContent = `${filteredBooks.length} book${filteredBooks.length !== 1 ? 's' : ''} found`;
+ 
+      if (filteredBooks.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+ 
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+      grid.innerHTML = filteredBooks.map(book => createBookCard(book)).join('');
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadLang();
+      onDataReady(() => {
+        updateNavbar();
+        updateFooter();
+        initBooksPage();
+      });
+    });
+  </script>
+</body>
+</html>
+ 

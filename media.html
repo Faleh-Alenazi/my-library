@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Media Account — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+    <div class="media-page">
+      <div class="media-container">
+ 
+        <!-- PROFILE CARD -->
+        <div class="media-profile-card">
+          <div class="media-profile-avatar">👨‍💻</div>
+          <h1>Faleh Al-Enazi</h1>
+          <p class="media-profile-title" data-lang="media-title">Developer & Creator of E-Library</p>
+          <p class="media-profile-bio" data-lang="media-bio">Passionate about building digital experiences. Connect with me on my social platforms!</p>
+ 
+          <!-- SOCIAL LINKS -->
+          <div class="media-social-links">
+            <a href="https://www.linkedin.com/in/faleh-al-enazi-178a1a299/" target="_blank" class="media-social-btn linkedin">
+              <i class="fab fa-linkedin"></i>
+              <div>
+                <span>LinkedIn</span>
+                <p data-lang="media-linkedin">Connect professionally</p>
+              </div>
+              <i class="fas fa-external-link-alt media-social-arrow"></i>
+            </a>
+ 
+            <a href="https://github.com/Faleh-Alenazi" target="_blank" class="media-social-btn github">
+              <i class="fab fa-github"></i>
+              <div>
+                <span>GitHub</span>
+                <p data-lang="media-github">Check out my projects</p>
+              </div>
+              <i class="fas fa-external-link-alt media-social-arrow"></i>
+            </a>
+          </div>
+ 
+          <a href="index.html" class="btn btn-secondary" style="margin-top:32px">
+            <i class="fas fa-arrow-left"></i> <span data-lang="media-back">Back to Library</span>
+          </a>
+        </div>
+ 
+      </div>
+    </div>
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls"></div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+        <a href="account.html" data-lang="nav-myaccount">My Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadLang();
+      onDataReady(() => {
+        updateNavbar();
+        updateFooter();
+      });
+    });
+  </script>
+</body>
+</html>

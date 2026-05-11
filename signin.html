@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign In — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin active" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+    <div class="auth-page">
+      <div class="auth-left">
+        <div class="auth-left-content">
+          <div class="auth-logo">📚</div>
+          <h2 data-lang="signin-welcome">Welcome Back!</h2>
+          <p data-lang="signin-desc">Sign in to your account to access your personal library and download your favorite books.</p>
+          <div class="auth-features">
+            <div class="auth-feature">
+              <i class="fas fa-download"></i>
+              <span data-lang="signin-feat1">Download your books</span>
+            </div>
+            <div class="auth-feature">
+              <i class="fas fa-history"></i>
+              <span data-lang="signin-feat2">View download history</span>
+            </div>
+            <div class="auth-feature">
+              <i class="fas fa-robot"></i>
+              <span data-lang="signin-feat3">Access AI assistant</span>
+            </div>
+            <div class="auth-feature">
+              <i class="fas fa-user-circle"></i>
+              <span data-lang="signin-feat4">Manage your profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div class="form-card">
+          <h2 class="form-title" data-lang="nav-signin">Sign In</h2>
+          <p class="form-subtitle" data-lang="signin-noaccount">Don't have an account? <a href="signup.html" data-lang="nav-signup">Sign up</a></p>
+ 
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> <span data-lang="signin-label-id">Username or Email</span></label>
+            <input type="text" id="identifier" placeholder="Enter your username or email"/>
+            <p class="form-error" id="identifierError"></p>
+          </div>
+ 
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> <span data-lang="signin-label-pass">Password</span></label>
+            <div class="password-input-wrapper">
+              <input type="password" id="password" placeholder="Enter your password"/>
+              <button class="password-toggle" onclick="togglePassword()">
+                <i class="fas fa-eye" id="passwordEyeIcon"></i>
+              </button>
+            </div>
+            <p class="form-error" id="passwordError"></p>
+          </div>
+ 
+          <p class="form-error" id="generalError"></p>
+ 
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="handleSignin()">
+            <i class="fas fa-sign-in-alt"></i> <span data-lang="nav-signin">Sign In</span>
+          </button>
+ 
+          <p style="text-align:center;margin-top:20px;font-size:0.9rem;color:var(--text-light)">
+            <a href="signup.html" style="color:var(--brown);font-weight:500" data-lang="signin-createfree">Create a free account</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls"></div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const icon = document.getElementById('passwordEyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+      }
+    }
+ 
+    function handleSignin() {
+      const identifier = document.getElementById('identifier').value.trim();
+      const password = document.getElementById('password').value;
+      const lang = localStorage.getItem('lang') || 'en';
+      const isAr = lang === 'ar';
+ 
+      ['identifierError', 'passwordError', 'generalError'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+ 
+      let valid = true;
+ 
+      if (!identifier) {
+        document.getElementById('identifierError').textContent = isAr ? 'اسم المستخدم أو البريد مطلوب!' : 'Username or email is required!';
+        document.getElementById('identifierError').style.display = 'block';
+        valid = false;
+      }
+      if (!password) {
+        document.getElementById('passwordError').textContent = isAr ? 'كلمة المرور مطلوبة!' : 'Password is required!';
+        document.getElementById('passwordError').style.display = 'block';
+        valid = false;
+      }
+      if (!valid) return;
+ 
+      const result = signinUser(identifier, password);
+      if (result.success) {
+        showToast(isAr ? 'مرحباً بعودتك! 👋' : 'Welcome back! 👋', 'success');
+        setTimeout(() => window.location.href = 'index.html', 1500);
+      } else {
+        document.getElementById('generalError').textContent = result.message;
+        document.getElementById('generalError').style.display = 'block';
+      }
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadLang();
+      onDataReady(() => {
+        updateNavbar();
+        updateFooter();
+      });
+    });
+  </script>
+</body>
+</html>
+ 

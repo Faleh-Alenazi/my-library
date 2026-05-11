@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup active" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+    <div class="auth-page">
+      <div class="auth-left">
+        <div class="auth-left-content">
+          <div class="auth-logo">📚</div>
+          <h2 data-lang="signup-join">Join E-Library</h2>
+          <p data-lang="signup-desc">Create your free account and get access to thousands of books ready to download.</p>
+          <div class="auth-features">
+            <div class="auth-feature"><i class="fas fa-download"></i><span data-lang="signup-feat1">Download unlimited books</span></div>
+            <div class="auth-feature"><i class="fas fa-bookmark"></i><span data-lang="signup-feat2">Save your favorites</span></div>
+            <div class="auth-feature"><i class="fas fa-robot"></i><span data-lang="signup-feat3">Access AI book assistant</span></div>
+            <div class="auth-feature"><i class="fas fa-history"></i><span data-lang="signup-feat4">Track download history</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div class="form-card">
+          <h2 class="form-title" data-lang="signup-createaccount">Create Account</h2>
+          <p class="form-subtitle">Already have an account? <a href="signin.html" data-lang="nav-signin">Sign in</a></p>
+ 
+          <!-- AVATAR UPLOAD -->
+          <div class="avatar-picker">
+            <p class="avatar-picker-label" id="avatarLabel">Upload your avatar</p>
+            <div style="display:flex;align-items:center;gap:16px;">
+              <div class="selected-avatar-preview">
+                <img id="selectedAvatarImg" src="https://api.dicebear.com/7.x/thumbs/svg?seed=default" alt="avatar" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid var(--brown);"/>
+              </div>
+              <div>
+                <label for="avatarUpload" class="btn btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 18px;">
+                  <i class="fas fa-upload"></i> <span id="uploadBtnText">Choose Photo</span>
+                </label>
+                <input type="file" id="avatarUpload" accept="image/*" style="display:none;" onchange="handleAvatarUpload(this)"/>
+                <p style="font-size:0.78rem;color:var(--text-light);margin-top:6px" id="uploadHint">JPG, PNG or GIF — max 2MB</p>
+              </div>
+            </div>
+          </div>
+            <div class="form-group">
+              <label><i class="fas fa-birthday-cake"></i> <span id="dobLabel">Date of Birth</span></label>
+              <input type="date" id="dob" max=""/>
+              <p class="form-error" id="dobError"></p>
+              </div>
+          <div class="form-group">
+            <label><i class="fas fa-user"></i> <span data-lang="signup-label-username">Username</span></label>
+            <input type="text" id="username" placeholder="Choose a unique username"/>
+            <p class="form-error" id="usernameError"></p>
+          </div>
+ 
+          <div class="form-group">
+            <label><i class="fas fa-envelope"></i> <span data-lang="signup-label-email">Email</span></label>
+            <input type="email" id="email" placeholder="Enter your email"/>
+            <p class="form-error" id="emailError"></p>
+          </div>
+ 
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> <span data-lang="signin-label-pass">Password</span></label>
+            <input type="password" id="password" placeholder="Create a password"/>
+            <p class="form-error" id="passwordError"></p>
+          </div>
+ 
+          <div class="form-group">
+            <label><i class="fas fa-lock"></i> <span data-lang="signup-label-confirm">Confirm Password</span></label>
+            <input type="password" id="confirmPassword" placeholder="Confirm your password"/>
+            <p class="form-error" id="confirmError"></p>
+          </div>
+ 
+          <p class="form-error" id="generalError"></p>
+ 
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="handleSignup()">
+            <i class="fas fa-user-plus"></i> <span data-lang="signup-createaccount">Create Account</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls"></div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    let selectedAvatar = 'https://api.dicebear.com/7.x/thumbs/svg?seed=default';
+ 
+    function handleAvatarUpload(input) {
+      const file = input.files[0];
+      const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast(isAr ? 'حجم الصورة يجب أن يكون أقل من 2MB!' : 'Image must be less than 2MB!', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedAvatar = e.target.result;
+        document.getElementById('selectedAvatarImg').src = selectedAvatar;
+        showToast(isAr ? 'تم رفع الصورة! ✅' : 'Avatar uploaded! ✅', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+ 
+    function handleSignup() {
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+ 
+      ['usernameError','emailError','passwordError','confirmError','generalError'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+ 
+      const dob = document.getElementById('dob').value;
+      if (!dob) {
+      document.getElementById('dobError').textContent = isAr ? 'تاريخ الميلاد مطلوب!' : 'Date of birth is required!';
+      document.getElementById('dobError').style.display = 'block';
+      valid = false;
+      }
+
+      let valid = true;
+      if (!username) { document.getElementById('usernameError').textContent = isAr ? 'اسم المستخدم مطلوب!' : 'Username is required!'; document.getElementById('usernameError').style.display = 'block'; valid = false; }
+      if (!email) { document.getElementById('emailError').textContent = isAr ? 'البريد الإلكتروني مطلوب!' : 'Email is required!'; document.getElementById('emailError').style.display = 'block'; valid = false; }
+      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
+      if (!passwordRegex.test(password)) {
+        document.getElementById('passwordError').textContent = isAr ? 'كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حروف وأرقام ورموز!' : 'Password must be at least 8 characters with letters, numbers and symbols!';
+        document.getElementById('passwordError').style.display = 'block';
+        valid = false;
+        }
+      if (password !== confirmPassword) { document.getElementById('confirmError').textContent = isAr ? 'كلمتا المرور غير متطابقتين!' : 'Passwords do not match!'; document.getElementById('confirmError').style.display = 'block'; valid = false; }
+      if (!valid) return;
+ 
+      const result = signupUser(username, email, password, selectedAvatar, dob);
+      if (result.success) {
+        showToast(isAr ? 'تم إنشاء الحساب بنجاح! 🎉' : 'Account created successfully! 🎉', 'success');
+        setTimeout(() => window.location.href = 'index.html', 1500);
+      } else {
+        document.getElementById('generalError').textContent = result.message;
+        document.getElementById('generalError').style.display = 'block';
+      }
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadLang();
+      onDataReady(() => {
+        updateNavbar();
+        updateFooter();
+        const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+        document.getElementById('avatarLabel').textContent = isAr ? 'ارفع صورتك الشخصية' : 'Upload your avatar';
+        document.getElementById('dobLabel').textContent = isAr ? 'تاريخ الميلاد' : 'Date of Birth';
+        document.getElementById('uploadBtnText').textContent = isAr ? 'اختر صورة' : 'Choose Photo';
+        document.getElementById('uploadHint').textContent = isAr ? 'JPG أو PNG أو GIF — الحد الأقصى 2MB' : 'JPG, PNG or GIF — max 2MB';
+      });
+    });
+  </script>
+</body>
+</html>
+ 

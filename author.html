@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Author — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+    <div class="author-page" id="authorPage">
+      <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls">
+      <a href="admin.html#add-book" class="admin-footer-btn"><i class="fas fa-plus"></i> <span data-lang="admin-addbook">Add Book</span></a>
+      <a href="admin.html#manage-books" class="admin-footer-btn"><i class="fas fa-edit"></i> <span data-lang="admin-editbooks">Edit/Delete Books</span></a>
+      <a href="admin.html#add-author" class="admin-footer-btn"><i class="fas fa-user-plus"></i> <span data-lang="admin-addauthor">Add Author</span></a>
+      <a href="admin.html#manage-authors" class="admin-footer-btn"><i class="fas fa-users"></i> <span data-lang="admin-editauthors">Edit/Delete Authors</span></a>
+      <a href="admin.html#manage-users" class="admin-footer-btn"><i class="fas fa-users-cog"></i> <span data-lang="admin-manageusers">Manage Users</span></a>
+      <a class="admin-footer-btn danger" onclick="handleAdminLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="admin-logout">Admin Logout</span></a>
+    </div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+        <a href="account.html" data-lang="nav-myaccount">My Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    function loadAuthorPage() {
+      const params = new URLSearchParams(window.location.search);
+      const authorId = parseInt(params.get('id'));
+      const page = document.getElementById('authorPage');
+      const lang = localStorage.getItem('lang') || 'en';
+      const isAr = lang === 'ar';
+ 
+      if (!authorId) {
+        page.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✍️</div><h3>${isAr ? 'المؤلف غير موجود' : 'Author not found'}</h3><a href="books.html" class="btn btn-primary" style="margin-top:16px">${isAr ? 'العودة للكتب' : 'Back to Books'}</a></div>`;
+        return;
+      }
+ 
+      const authors = getAuthors();
+      const author = authors.find(a => a.id === authorId);
+ 
+      if (!author) {
+        page.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✍️</div><h3>${isAr ? 'المؤلف غير موجود' : 'Author not found'}</h3><a href="books.html" class="btn btn-primary" style="margin-top:16px">${isAr ? 'العودة للكتب' : 'Back to Books'}</a></div>`;
+        return;
+      }
+ 
+      const books = getBooks().filter(b => b.authorId == authorId);
+      document.title = `${author.name} — E-Library`;
+ 
+      page.innerHTML = `
+        <div class="author-container">
+          <div class="author-hero">
+            <div class="author-hero-content">
+              ${author.photo
+                ? `<img src="${author.photo}" alt="${author.name}" class="author-hero-img"/>`
+                : `<div class="author-hero-img-placeholder">✍️</div>`}
+              <div class="author-hero-info">
+                <div class="badge">${isAr ? 'مؤلف' : 'Author'}</div>
+                <h1>${author.name}</h1>
+                <p>${author.bio || (isAr ? 'لا توجد سيرة ذاتية.' : 'No biography available.')}</p>
+                ${author.birthYear ? `<p style="color:var(--cream3);font-size:0.9rem;margin-top:4px;">${isAr ? 'المولد:' : 'Born:'} ${author.birthYear}</p>` : ''}
+                <div class="author-hero-stats">
+                  <div class="author-stat">
+                    <span>${books.length}</span>
+                    <p>${isAr ? 'كتاب' : 'Books'}</p>
+                  </div>
+                  <div class="author-stat-divider"></div>
+                  <div class="author-stat">
+                    <span>${books.reduce((sum, b) => sum + (b.downloads || 0), 0)}</span>
+                    <p>${isAr ? 'تحميل' : 'Downloads'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+          <div class="author-books-section">
+            <div class="author-books-header">
+              <h2 class="section-title">${isAr ? `كتب ${author.name}` : `Books by ${author.name}`}</h2>
+            </div>
+            ${books.length === 0
+              ? `<div class="empty-state"><div class="empty-state-icon">📚</div><h3>${isAr ? 'لا توجد كتب بعد' : 'No books yet'}</h3></div>`
+              : `<div class="books-grid">${books.map(book => createBookCard(book)).join('')}</div>`}
+          </div>
+        </div>
+      `;
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      loadTheme();
+      loadLang();
+      onDataReady(() => {
+        updateNavbar();
+        updateFooter();
+        loadAuthorPage();
+      });
+    });
+  </script>
+</body>
+</html>
+ 

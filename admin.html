@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+ 
+    <!-- ADMIN LOGIN SECTION -->
+    <div class="admin-login-section" id="adminLoginSection">
+      <div class="auth-page">
+        <div class="auth-left" style="background: var(--brown-dark)">
+          <div class="auth-left-content">
+            <div class="auth-logo">🛡️</div>
+            <h2 id="adminPanelTitle">Admin Panel</h2>
+            <p id="adminPanelDesc">Restricted area. Only authorized administrators can access this section.</p>
+            <div class="auth-features">
+              <div class="auth-feature"><i class="fas fa-plus"></i><span id="adminFeat1">Add & manage books</span></div>
+              <div class="auth-feature"><i class="fas fa-users"></i><span id="adminFeat2">Manage authors</span></div>
+              <div class="auth-feature"><i class="fas fa-users-cog"></i><span id="adminFeat3">Manage users</span></div>
+              <div class="auth-feature"><i class="fas fa-chart-bar"></i><span id="adminFeat4">View statistics</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="auth-right">
+          <div class="form-card">
+            <h2 class="form-title" id="adminLoginTitle">🛡️ Admin Login</h2>
+            <p class="form-subtitle" id="adminLoginSubtitle">Enter your admin credentials</p>
+            <div class="form-group">
+              <label><i class="fas fa-user-shield"></i> <span id="adminUsernameLabel">Admin Username</span></label>
+              <input type="text" id="adminUsername" placeholder="Enter admin username"/>
+            </div>
+            <div class="form-group">
+              <label><i class="fas fa-lock"></i> <span id="adminPasswordLabel">Password</span></label>
+              <div class="password-input-wrapper">
+                <input type="password" id="adminPassword" placeholder="Enter admin password"/>
+                <button class="password-toggle" onclick="toggleAdminPassword()">
+                  <i class="fas fa-eye" id="adminEyeIcon"></i>
+                </button>
+              </div>
+            </div>
+            <p class="form-error" id="adminError"></p>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px" onclick="handleAdminLogin()">
+              <i class="fas fa-sign-in-alt"></i> <span id="adminLoginBtn2">Login as Admin</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- ADMIN PANEL SECTION -->
+    <div class="admin-panel-section" id="adminPanelSection" style="display:none">
+      <div class="admin-panel">
+ 
+        <!-- ADMIN HEADER -->
+        <div class="admin-header">
+          <div>
+            <h1 id="adminPanelHeader">🛡️ Admin Panel</h1>
+            <p id="adminWelcome">Welcome back, Admin!</p>
+          </div>
+          <button class="btn btn-outline" onclick="handleAdminLogout()">
+            <i class="fas fa-sign-out-alt"></i> <span id="adminLogoutBtn">Logout</span>
+          </button>
+        </div>
+ 
+        <!-- STATS -->
+        <div class="admin-stats" id="stats">
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">📚</div>
+            <div>
+              <div class="admin-stat-number" id="statBooks">0</div>
+              <div class="admin-stat-label" id="statBooksLabel">Total Books</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">✍️</div>
+            <div>
+              <div class="admin-stat-number" id="statAuthors">0</div>
+              <div class="admin-stat-label" id="statAuthorsLabel">Total Authors</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">👥</div>
+            <div>
+              <div class="admin-stat-number" id="statUsers">0</div>
+              <div class="admin-stat-label" id="statUsersLabel">Total Users</div>
+            </div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon">⬇️</div>
+            <div>
+              <div class="admin-stat-number" id="statDownloads">0</div>
+              <div class="admin-stat-label" id="statDownloadsLabel">Total Downloads</div>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- TABS -->
+        <div class="admin-tabs" id="adminTabsRow"></div>
+ 
+        <!-- IMPORT BOOKS TAB -->
+        <div class="admin-tab-content" id="tab-import-books">
+          <div class="admin-form-card">
+            <h3 id="importTitle">📥 Import from Gutenberg</h3>
+            <div style="display:flex;gap:12px;margin-bottom:20px;">
+              <input type="text" id="gutenbergSearch" placeholder="Search books e.g. Shakespeare, Pride..." style="flex:1;padding:10px 14px;border:2px solid var(--cream3);border-radius:8px;background:#fff;font-size:1rem;"/>
+              <button class="btn btn-primary" onclick="searchGutenberg()">
+                <i class="fas fa-search"></i> <span id="importSearchBtn">Search</span>
+              </button>
+            </div>
+            <div id="gutenbergResults"></div>
+          </div>
+        </div>
+ 
+        <!-- ADD BOOK TAB -->
+        <div class="admin-tab-content active" id="tab-add-book">
+          <div class="admin-form-card">
+            <h3 id="addBookTitle">➕ Add New Book</h3>
+            <div class="admin-form-grid">
+              <div class="form-group">
+                <label id="bookTitleLabel">Book Title *</label>
+                <input type="text" id="bookTitle" placeholder="Enter book title"/>
+              </div>
+              <div class="form-group">
+                <label id="bookAuthorLabel">Author *</label>
+                <select id="bookAuthor"><option value="">Select an author...</option></select>
+              </div>
+              <div class="form-group">
+                <label id="bookCategoryLabel">Category *</label>
+                <select id="bookCategory"><option value="">Select category...</option></select>
+              </div>
+              <div class="form-group">
+                <label id="bookCoverLabel">Cover Image URL</label>
+                <input type="text" id="bookCover" placeholder="https://..."/>
+                <div style="margin-top:8px;display:flex;align-items:center;gap:10px;">
+                  <label for="bookCoverUpload" class="btn btn-secondary" style="cursor:pointer;padding:6px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;">
+                    <i class="fas fa-upload"></i> Upload Image
+                  </label>
+                  <input type="file" id="bookCoverUpload" accept="image/*" style="display:none;" onchange="handleImageUpload(this, 'bookCover', 300, 450)"/>
+                  <img id="bookCoverPreview" style="width:40px;height:60px;object-fit:cover;border-radius:4px;display:none;border:2px solid var(--brown);"/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label id="bookPdfLabel">PDF URL *</label>
+                <input type="text" id="bookPdf" placeholder="https://..."/>
+              </div>
+              <div class="form-group">
+                <label id="bookYearLabel">Publication Year</label>
+                <input type="number" id="bookYear" placeholder="e.g. 1925" min="1000" max="2099"/>
+              </div>
+              <div class="form-group">
+                <label id="bookFeaturedLabel">Featured Book?</label>
+                <select id="bookFeatured">
+                <option value="no" id="featuredNo">No</option>
+                <option value="english" id="featuredEnglish">English Featured</option>
+                <option value="arabic" id="featuredArabic">Arabic Featured</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label id="bookDescLabel">Description</label>
+              <textarea id="bookDescription" placeholder="Write a short description..."></textarea>
+            </div>
+            <p class="form-error" id="bookError"></p>
+            <p class="form-success" id="bookSuccess"></p>
+            <button class="btn btn-primary" id="addBookBtn" onclick="handleAddBook()">
+              <i class="fas fa-plus"></i> <span id="addBookBtnText">Add Book</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- MANAGE BOOKS TAB -->
+        <div class="admin-tab-content" id="tab-manage-books">
+          <div class="admin-form-card">
+            <h3 id="manageBooksTitle">📚 All Books</h3>
+            <div id="adminBooksList"></div>
+          </div>
+        </div>
+ 
+        <!-- ADD AUTHOR TAB -->
+        <div class="admin-tab-content" id="tab-add-author">
+          <div class="admin-form-card">
+            <h3 id="addAuthorTitle">✍️ Add New Author</h3>
+            <div class="admin-form-grid">
+              <div class="form-group">
+                <label id="authorNameLabel">Author Name *</label>
+                <input type="text" id="authorName" placeholder="Enter author name"/>
+              </div>
+              <div class="form-group">
+                <label id="authorPhotoLabel">Photo URL</label>
+                <input type="text" id="authorPhoto" placeholder="https://..."/>
+                <div style="margin-top:8px;display:flex;align-items:center;gap:10px;">
+                  <label for="authorPhotoUpload" class="btn btn-secondary" style="cursor:pointer;padding:6px 14px;font-size:0.82rem;display:inline-flex;align-items:center;gap:6px;">
+                    <i class="fas fa-upload"></i> Upload Photo
+                  </label>
+                  <input type="file" id="authorPhotoUpload" accept="image/*" style="display:none;" onchange="handleImageUpload(this, 'authorPhoto', 200, 200)"/>
+                  <img id="authorPhotoPreview" style="width:50px;height:50px;object-fit:cover;border-radius:50%;display:none;border:2px solid var(--brown);"/>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label id="authorBirthLabel">Birth Year</label>
+              <input type="number" id="authorBirthYear" placeholder="e.g. 1896"/>
+            </div>
+            <div class="form-group">
+              <label id="authorBioLabel">Bio</label>
+              <textarea id="authorBio" placeholder="Write a short bio..."></textarea>
+            </div>
+            <p class="form-error" id="authorError"></p>
+            <p class="form-success" id="authorSuccess"></p>
+            <button class="btn btn-primary" id="addAuthorBtn" onclick="handleAddAuthor()">
+              <i class="fas fa-plus"></i> <span id="addAuthorBtnText">Add Author</span>
+            </button>
+          </div>
+        </div>
+ 
+        <!-- MANAGE AUTHORS TAB -->
+        <div class="admin-tab-content" id="tab-manage-authors">
+          <div class="admin-form-card">
+            <h3 id="manageAuthorsTitle">👥 All Authors</h3>
+            <div id="adminAuthorsList"></div>
+          </div>
+        </div>
+ 
+        <!-- MANAGE USERS TAB -->
+        <div class="admin-tab-content" id="tab-manage-users">
+          <div class="admin-form-card">
+            <h3 id="manageUsersTitle">🛡️ All Users</h3>
+            <div id="adminUsersList"></div>
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls"></div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    const adminCategories = [
+      'Fiction','Mystery','Romance','Science Fiction','Horror','Adventure',
+      'Fantasy','History','Biography','Philosophy','Self-Help','Poetry',
+      'Drama','Comedy','Crime','Thriller','Classic','Science','Politics',
+      'Art','Travel','Cooking','Psychology','Religion','Children','Business',
+      'Health','Sports','Music','Technology'
+    ];
+ 
+    function t(enText, arText) {
+      const lang = localStorage.getItem('lang') || 'en';
+      return lang === 'ar' ? arText : enText;
+    }
+ 
+    function isAr() {
+      return (localStorage.getItem('lang') || 'en') === 'ar';
+    }
+ 
+    function applyAdminLang() {
+      const ar = isAr();
+      // Login section
+      setText('adminPanelTitle', ar ? 'لوحة الإدارة' : 'Admin Panel');
+      setText('adminPanelDesc', ar ? 'منطقة مقيدة. يمكن فقط للمشرفين المخولين الوصول.' : 'Restricted area. Only authorized administrators can access this section.');
+      setText('adminFeat1', ar ? 'إضافة وإدارة الكتب' : 'Add & manage books');
+      setText('adminFeat2', ar ? 'إدارة المؤلفين' : 'Manage authors');
+      setText('adminFeat3', ar ? 'إدارة المستخدمين' : 'Manage users');
+      setText('adminFeat4', ar ? 'عرض الإحصائيات' : 'View statistics');
+      setText('adminLoginTitle', ar ? '🛡️ دخول المشرف' : '🛡️ Admin Login');
+      setText('adminLoginSubtitle', ar ? 'أدخل بيانات المشرف' : 'Enter your admin credentials');
+      setText('adminUsernameLabel', ar ? 'اسم المشرف' : 'Admin Username');
+      setText('adminPasswordLabel', ar ? 'كلمة المرور' : 'Password');
+      setText('adminLoginBtn2', ar ? 'دخول كمشرف' : 'Login as Admin');
+      // Panel
+      setText('adminPanelHeader', ar ? '🛡️ لوحة الإدارة' : '🛡️ Admin Panel');
+      setText('adminWelcome', ar ? 'مرحباً بعودتك، مشرف!' : 'Welcome back, Admin!');
+      setText('adminLogoutBtn', ar ? 'تسجيل الخروج' : 'Logout');
+      setText('statBooksLabel', ar ? 'إجمالي الكتب' : 'Total Books');
+      setText('statAuthorsLabel', ar ? 'إجمالي المؤلفين' : 'Total Authors');
+      setText('statUsersLabel', ar ? 'إجمالي المستخدمين' : 'Total Users');
+      setText('statDownloadsLabel', ar ? 'إجمالي التحميلات' : 'Total Downloads');
+      // Tabs
+      renderTabs();
+      // Add Book form
+      setText('addBookTitle', ar ? '➕ إضافة كتاب جديد' : '➕ Add New Book');
+      setText('bookTitleLabel', ar ? 'عنوان الكتاب *' : 'Book Title *');
+      setText('bookAuthorLabel', ar ? 'المؤلف *' : 'Author *');
+      setText('bookCategoryLabel', ar ? 'التصنيف *' : 'Category *');
+      setText('bookCoverLabel', ar ? 'رابط صورة الغلاف' : 'Cover Image URL');
+      setText('bookPdfLabel', ar ? 'رابط PDF *' : 'PDF URL *');
+      setText('bookYearLabel', ar ? 'سنة النشر' : 'Publication Year');
+      setText('bookFeaturedLabel', ar ? 'كتاب مميز؟' : 'Featured Book?');
+      setText('featuredNo', ar ? 'لا' : 'No');
+      setText('featuredEnglish', ar ? 'كتاب مميز إنجليزي' : 'English Featured');
+      setText('featuredArabic', ar ? 'كتاب مميز عربي' : 'Arabic Featured');
+      setText('bookDescLabel', ar ? 'الوصف' : 'Description');
+      setText('addBookBtnText', ar ? 'إضافة الكتاب' : 'Add Book');
+      setText('manageBooksTitle', ar ? '📚 جميع الكتب' : '📚 All Books');
+      // Add Author form
+      setText('addAuthorTitle', ar ? '✍️ إضافة مؤلف جديد' : '✍️ Add New Author');
+      setText('authorNameLabel', ar ? 'اسم المؤلف *' : 'Author Name *');
+      setText('authorPhotoLabel', ar ? 'رابط الصورة' : 'Photo URL');
+      setText('authorBirthLabel', ar ? 'سنة الميلاد' : 'Birth Year');
+      setText('authorBioLabel', ar ? 'السيرة الذاتية' : 'Bio');
+      setText('addAuthorBtnText', ar ? 'إضافة المؤلف' : 'Add Author');
+      setText('manageAuthorsTitle', ar ? '👥 جميع المؤلفين' : '👥 All Authors');
+      setText('manageUsersTitle', ar ? '🛡️ جميع المستخدمين' : '🛡️ All Users');
+      // Import
+      setText('importTitle', ar ? '📥 استيراد من Gutenberg' : '📥 Import from Gutenberg');
+      setText('importSearchBtn', ar ? 'بحث' : 'Search');
+    }
+ 
+    function setText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+ 
+    function renderTabs() {
+      const ar = isAr();
+      const tabs = [
+        { id: 'add-book',       label: ar ? '➕ إضافة كتاب'     : '➕ Add Book' },
+        { id: 'manage-books',   label: ar ? '📚 إدارة الكتب'    : '📚 Manage Books' },
+        { id: 'add-author',     label: ar ? '✍️ إضافة مؤلف'    : '✍️ Add Author' },
+        { id: 'manage-authors', label: ar ? '👥 إدارة المؤلفين' : '👥 Manage Authors' },
+        { id: 'manage-users',   label: ar ? '🛡️ إدارة المستخدمين': '🛡️ Manage Users' },
+        { id: 'import-books',   label: ar ? '📥 استيراد كتب'    : '📥 Import Books' },
+      ];
+      const row = document.getElementById('adminTabsRow');
+      if (!row) return;
+      const activeTab = row.dataset.active || 'add-book';
+      row.innerHTML = tabs.map(tab => `
+        <button class="admin-tab ${tab.id === activeTab ? 'active' : ''}" onclick="showTab('${tab.id}')">${tab.label}</button>
+      `).join('');
+    }
+ 
+    function toggleAdminPassword() {
+      const input = document.getElementById('adminPassword');
+      const icon = document.getElementById('adminEyeIcon');
+      if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+      else { input.type = 'password'; icon.className = 'fas fa-eye'; }
+    }
+ 
+    function handleAdminLogin() {
+      const username = document.getElementById('adminUsername').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      const error = document.getElementById('adminError');
+      const ar = isAr();
+      if (!username || !password) {
+        error.textContent = ar ? 'يرجى ملء جميع الحقول!' : 'Please fill in all fields!';
+        error.style.display = 'block'; return;
+      }
+      if (loginAdmin(username, password)) {
+        document.getElementById('adminLoginSection').style.display = 'none';
+        document.getElementById('adminPanelSection').style.display = 'block';
+        loadAdminPanel();
+        updateFooter();
+        showToast(ar ? 'مرحباً، مشرف! 🛡️' : 'Welcome, Admin! 🛡️', 'success');
+      } else {
+        error.textContent = ar ? 'بيانات غير صحيحة!' : 'Invalid credentials!';
+        error.style.display = 'block';
+      }
+    }
+ 
+    function showTab(tabName) {
+      document.querySelectorAll('.admin-tab-content').forEach(t => t.classList.remove('active'));
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+      const row = document.getElementById('adminTabsRow');
+      if (row) row.dataset.active = tabName;
+      renderTabs();
+      if (tabName === 'manage-books') loadAdminBooks();
+      if (tabName === 'manage-authors') loadAdminAuthors();
+      if (tabName === 'manage-users') loadAdminUsers();
+    }
+ 
+    function loadAdminPanel() {
+      const books = getBooks();
+      const authors = getAuthors();
+      const users = getUsers();
+      const ar = isAr();
+      const totalDownloads = books.reduce((sum, b) => sum + (b.downloads || 0), 0);
+ 
+      document.getElementById('statBooks').textContent = books.length;
+      document.getElementById('statAuthors').textContent = authors.length;
+      document.getElementById('statUsers').textContent = users.length;
+      document.getElementById('statDownloads').textContent = totalDownloads;
+ 
+      const catSelect = document.getElementById('bookCategory');
+      catSelect.innerHTML = `<option value="">${ar ? 'اختر تصنيفاً...' : 'Select category...'}</option>`;
+      adminCategories.forEach(c => { catSelect.innerHTML += `<option value="${c}">${c}</option>`; });
+ 
+      loadAuthorDropdown();
+      applyAdminLang();
+    }
+ 
+    function loadAuthorDropdown() {
+      const ar = isAr();
+      const authors = getAuthors();
+      const select = document.getElementById('bookAuthor');
+      select.innerHTML = `<option value="">${ar ? 'اختر مؤلفاً...' : 'Select an author...'}</option>`;
+      authors.forEach(a => { select.innerHTML += `<option value="${a.id}">${a.name}</option>`; });
+    }
+ 
+    function handleAddBook() {
+      const title = document.getElementById('bookTitle').value.trim();
+      const authorId = document.getElementById('bookAuthor').value;
+      const category = document.getElementById('bookCategory').value;
+      const cover = document.getElementById('bookCover').value.trim();
+      const pdf = document.getElementById('bookPdf').value.trim();
+      const description = document.getElementById('bookDescription').value.trim();
+      const featured = document.getElementById('bookFeatured').value;
+      const year = document.getElementById('bookYear').value.trim();
+      const error = document.getElementById('bookError');
+      const success = document.getElementById('bookSuccess');
+      const ar = isAr();
+ 
+      error.style.display = 'none'; success.style.display = 'none';
+      if (!title || !category || !pdf) {
+        error.textContent = ar ? 'يرجى ملء جميع الحقول المطلوبة!' : 'Please fill in all required fields!';
+        error.style.display = 'block'; return;
+      }
+ 
+      const authors = getAuthors();
+      const author = authors.find(a => a.id == authorId);
+      const books = getBooks();
+      const newBook = { id: Date.now(), title, authorId, authorName: author ? author.name : 'Unknown', category, cover, pdf, description, featured: featured === 'no' ? false : featured, year, downloads: 0, addedDate: new Date().toLocaleDateString() };
+      books.push(newBook);
+      saveBooks(books);
+ 
+      success.textContent = ar ? `تمت إضافة "${title}" بنجاح! ✅` : `"${title}" added successfully! ✅`;
+      success.style.display = 'block';
+ 
+      ['bookTitle','bookCover','bookPdf','bookDescription','bookYear'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('bookAuthor').value = '';
+      document.getElementById('bookCategory').value = '';
+      document.getElementById('bookFeatured').value = 'false';
+      loadAdminPanel();
+    }
+ 
+    function loadAdminBooks() {
+      const books = getBooks();
+      const container = document.getElementById('adminBooksList');
+      const ar = isAr();
+      if (books.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📚</div><h3>${ar ? 'لا توجد كتب بعد' : 'No books yet'}</h3></div>`;
+        return;
+      }
+      container.innerHTML = `
+        <div class="admin-search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" id="bookSearchInput" placeholder="${ar ? 'ابحث عن كتاب...' : 'Search books...'}" oninput="filterAdminBooks(this.value)"/>
+        </div>
+        <div id="booksListContainer"></div>`;
+      renderAdminBooks(books);
+    }
+ 
+    function filterAdminBooks(query) {
+      const books = getBooks().filter(b =>
+        b.title.toLowerCase().includes(query.toLowerCase()) ||
+        b.authorName.toLowerCase().includes(query.toLowerCase())
+      );
+      renderAdminBooks(books);
+    }
+ 
+    function renderAdminBooks(books) {
+      const container = document.getElementById('booksListContainer');
+      if (!container) return;
+      const ar = isAr();
+      if (books.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📚</div><h3>${ar ? 'لا توجد كتب' : 'No books found'}</h3></div>`;
+        return;
+      }
+      container.innerHTML = books.map(book => `
+        <div class="admin-list-item">
+          <div class="admin-list-item-info">
+            ${book.cover ? `<img src="${book.cover}" alt="${book.title}" class="admin-book-thumb"/>` : '<div class="admin-book-thumb-placeholder">📖</div>'}
+            <div>
+              <strong>${book.title}</strong>
+              <p>${book.authorName} • ${book.category}</p>
+              <p>⬇️ ${book.downloads || 0} ${ar ? 'تحميل' : 'downloads'}</p>
+            </div>
+          </div>
+          <div class="admin-list-item-actions">
+            <button class="btn btn-secondary" onclick="editBook(${book.id})" style="padding:6px 14px;font-size:0.82rem">
+              <i class="fas fa-edit"></i> ${ar ? 'تعديل' : 'Edit'}
+            </button>
+            <button class="btn" onclick="deleteBook(${book.id})" style="padding:6px 14px;font-size:0.82rem;background:#e74c3c;color:white">
+              <i class="fas fa-trash"></i> ${ar ? 'حذف' : 'Delete'}
+            </button>
+          </div>
+        </div>`).join('');
+    }
+ 
+    function deleteBook(id) {
+      const ar = isAr();
+      openDeleteModal(ar ? 'هل أنت متأكد من حذف هذا الكتاب؟' : 'Are you sure you want to delete this book?', () => {
+        const books = getBooks().filter(b => b.id !== id);
+        saveBooks(books); loadAdminBooks(); loadAdminPanel();
+        showToast(ar ? 'تم حذف الكتاب!' : 'Book deleted!', 'success');
+      });
+    }
+ 
+    function editBook(id) {
+      const books = getBooks();
+      const book = books.find(b => b.id === id);
+      if (!book) return;
+      const ar = isAr();
+      showTab('add-book');
+      document.getElementById('bookTitle').value = book.title;
+      document.getElementById('bookCategory').value = book.category;
+      document.getElementById('bookCover').value = book.cover || '';
+      document.getElementById('bookPdf').value = book.pdf || '';
+      document.getElementById('bookDescription').value = book.description || '';
+      document.getElementById('bookFeatured').value = book.featured === true ? 'english' : (book.featured || 'no');
+      document.getElementById('bookYear').value = book.year || '';
+      loadAuthorDropdown();
+      document.getElementById('bookAuthor').value = book.authorId;
+      const btn = document.getElementById('addBookBtn');
+      btn.innerHTML = `<i class="fas fa-save"></i> ${ar ? 'تحديث الكتاب' : 'Update Book'}`;
+      btn.onclick = () => updateBook(id);
+    }
+ 
+    function updateBook(id) {
+      const books = getBooks();
+      const index = books.findIndex(b => b.id === id);
+      if (index === -1) return;
+      const ar = isAr();
+      const authors = getAuthors();
+      const authorId = document.getElementById('bookAuthor').value;
+      const author = authors.find(a => a.id == authorId);
+      books[index] = { ...books[index], title: document.getElementById('bookTitle').value.trim(), authorId, authorName: author ? author.name : 'Unknown', category: document.getElementById('bookCategory').value, cover: document.getElementById('bookCover').value.trim(), pdf: document.getElementById('bookPdf').value.trim(), description: document.getElementById('bookDescription').value.trim(), featured: document.getElementById('bookFeatured').value, year: document.getElementById('bookYear').value.trim() };      saveBooks(books);
+      showToast(ar ? 'تم تحديث الكتاب! ✅' : 'Book updated! ✅', 'success');
+      setTimeout(() => showTab('manage-books'), 1000);
+      const btn = document.getElementById('addBookBtn');
+      btn.innerHTML = `<i class="fas fa-plus"></i> ${ar ? 'إضافة الكتاب' : 'Add Book'}`;
+      btn.onclick = handleAddBook;
+      loadAdminPanel();
+    }
+ 
+    function handleAddAuthor() {
+      const name = document.getElementById('authorName').value.trim();
+      const photo = document.getElementById('authorPhoto').value.trim();
+      const bio = document.getElementById('authorBio').value.trim();
+      const birthYear = document.getElementById('authorBirthYear').value.trim();
+      const error = document.getElementById('authorError');
+      const success = document.getElementById('authorSuccess');
+      const ar = isAr();
+      error.style.display = 'none'; success.style.display = 'none';
+      if (!name) {
+        error.textContent = ar ? 'اسم المؤلف مطلوب!' : 'Author name is required!';
+        error.style.display = 'block'; return;
+      }
+      const authors = getAuthors();
+      authors.push({ id: Date.now(), name, photo, bio, birthYear, addedDate: new Date().toLocaleDateString() });
+      saveAuthors(authors);
+      success.textContent = ar ? `تمت إضافة "${name}" بنجاح! ✅` : `"${name}" added successfully! ✅`;
+      success.style.display = 'block';
+      ['authorName','authorPhoto','authorBio','authorBirthYear'].forEach(id => document.getElementById(id).value = '');
+      loadAdminPanel();
+    }
+ 
+    function loadAdminAuthors() {
+      const authors = getAuthors();
+      const container = document.getElementById('adminAuthorsList');
+      const ar = isAr();
+      container.innerHTML = `
+        <div class="admin-search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" id="authorSearchInput" placeholder="${ar ? 'ابحث عن مؤلف...' : 'Search authors...'}" oninput="filterAdminAuthors(this.value)"/>
+        </div>
+        <div id="authorsListContainer"></div>`;
+      renderAdminAuthors(authors);
+    }
+ 
+    function filterAdminAuthors(query) {
+      const authors = getAuthors().filter(a => a.name.toLowerCase().includes(query.toLowerCase()));
+      renderAdminAuthors(authors);
+    }
+ 
+    function renderAdminAuthors(authors) {
+      const container = document.getElementById('authorsListContainer');
+      if (!container) return;
+      const ar = isAr();
+      if (authors.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">✍️</div><h3>${ar ? 'لا يوجد مؤلفون' : 'No authors found'}</h3></div>`;
+        return;
+      }
+      container.innerHTML = authors.map(author => `
+        <div class="admin-list-item">
+          <div class="admin-list-item-info">
+            ${author.photo ? `<img src="${author.photo}" alt="${author.name}" class="admin-book-thumb" style="border-radius:50%"/>` : '<div class="admin-book-thumb-placeholder">✍️</div>'}
+            <div>
+              <strong>${author.name}</strong>
+              <p>${author.bio ? author.bio.substring(0, 80) + '...' : (ar ? 'لا توجد سيرة ذاتية' : 'No bio')}</p>
+            </div>
+          </div>
+          <div class="admin-list-item-actions">
+            <button class="btn btn-secondary" onclick="editAuthor(${author.id})" style="padding:6px 14px;font-size:0.82rem">
+              <i class="fas fa-edit"></i> ${ar ? 'تعديل' : 'Edit'}
+            </button>
+            <button class="btn" onclick="deleteAuthor(${author.id})" style="padding:6px 14px;font-size:0.82rem;background:#e74c3c;color:white">
+              <i class="fas fa-trash"></i> ${ar ? 'حذف' : 'Delete'}
+            </button>
+          </div>
+        </div>`).join('');
+    }
+ 
+    function deleteAuthor(id) {
+      const ar = isAr();
+      openDeleteModal(ar ? 'هل أنت متأكد من حذف هذا المؤلف؟' : 'Are you sure you want to delete this author?', () => {
+        const authors = getAuthors().filter(a => a.id !== id);
+        saveAuthors(authors); loadAdminAuthors(); loadAdminPanel();
+        showToast(ar ? 'تم حذف المؤلف!' : 'Author deleted!', 'success');
+      });
+    }
+ 
+    function editAuthor(id) {
+      const authors = getAuthors();
+      const author = authors.find(a => a.id === id);
+      if (!author) return;
+      const ar = isAr();
+      showTab('add-author');
+      document.getElementById('authorName').value = author.name;
+      document.getElementById('authorPhoto').value = author.photo || '';
+      document.getElementById('authorBirthYear').value = author.birthYear || '';
+      document.getElementById('authorBio').value = author.bio || '';
+      const btn = document.getElementById('addAuthorBtn');
+      btn.innerHTML = `<i class="fas fa-save"></i> ${ar ? 'تحديث المؤلف' : 'Update Author'}`;
+      btn.onclick = () => updateAuthor(id);
+    }
+ 
+    function updateAuthor(id) {
+      const authors = getAuthors();
+      const index = authors.findIndex(a => a.id === id);
+      if (index === -1) return;
+      const ar = isAr();
+      authors[index] = { ...authors[index], name: document.getElementById('authorName').value.trim(), photo: document.getElementById('authorPhoto').value.trim(), bio: document.getElementById('authorBio').value.trim(), birthYear: document.getElementById('authorBirthYear').value.trim() };
+      saveAuthors(authors);
+      showToast(ar ? 'تم تحديث المؤلف! ✅' : 'Author updated! ✅', 'success');
+      setTimeout(() => showTab('manage-authors'), 1000);
+      const btn = document.getElementById('addAuthorBtn');
+      btn.innerHTML = `<i class="fas fa-plus"></i> ${ar ? 'إضافة المؤلف' : 'Add Author'}`;
+      btn.onclick = handleAddAuthor;
+    }
+ 
+    function loadAdminUsers() {
+      const users = getUsers();
+      const container = document.getElementById('adminUsersList');
+      const ar = isAr();
+      container.innerHTML = `
+        <div class="admin-search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" id="userSearchInput" placeholder="${ar ? 'ابحث عن مستخدم...' : 'Search users...'}" oninput="filterAdminUsers(this.value)"/>
+        </div>
+        <div id="usersListContainer"></div>`;
+      renderAdminUsers(users);
+    }
+ 
+    function filterAdminUsers(query) {
+      const users = getUsers().filter(u =>
+        u.username.toLowerCase().includes(query.toLowerCase()) ||
+        u.email.toLowerCase().includes(query.toLowerCase())
+      );
+      renderAdminUsers(users);
+    }
+ 
+    function renderAdminUsers(users) {
+      const container = document.getElementById('usersListContainer');
+      if (!container) return;
+      const ar = isAr();
+      if (users.length === 0) {
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">👥</div><h3>${ar ? 'لا يوجد مستخدمون' : 'No users found'}</h3></div>`;
+        return;
+      }
+      container.innerHTML = users.map(user => `
+        <div class="admin-list-item">
+          <div class="admin-list-item-info">
+            <img src="${user.avatar || 'https://api.dicebear.com/7.x/thumbs/svg?seed=' + user.username}" class="admin-book-thumb" style="border-radius:50%"/>
+            <div>
+              <strong>${user.username} ${user.banned ? '🚫 ' + (ar ? 'محظور' : 'Banned') : ''} ${user.suspended ? '⏸️ ' + (ar ? 'موقوف' : 'Suspended') : ''}</strong>
+              <p>${user.email}</p>
+              <p>${ar ? 'انضم:' : 'Joined:'} ${user.joinDate} • ${ar ? 'التحميلات:' : 'Downloads:'} ${user.downloads?.length || 0}</p>
+              ${user.dob ? `<p>${ar ? 'تاريخ الميلاد:' : 'Date of Birth:'} ${user.dob} (${calculateAge(user.dob)} ${ar ? 'سنة' : 'years old'})</p>` : ''}
+              ${user.banExpiry ? `<p style="color:#e74c3c;font-size:0.8rem">${ar ? 'ينتهي الحظر:' : 'Ban expires:'} ${user.banExpiry}</p>` : ''}
+            </div>
+          </div>
+          <div class="admin-list-item-actions">
+            <button class="btn btn-secondary" onclick="toggleSuspend(${user.id})" style="padding:6px 14px;font-size:0.82rem">
+              <i class="fas fa-${user.suspended ? 'play' : 'pause'}"></i> ${user.suspended ? (ar ? 'إلغاء الإيقاف' : 'Unsuspend') : (ar ? 'إيقاف' : 'Suspend')}
+            </button>
+            <button class="btn" onclick="openBanModal(${user.id})" style="padding:6px 14px;font-size:0.82rem;background:#e67e22;color:white">
+              <i class="fas fa-ban"></i> ${user.banned ? (ar ? 'إلغاء الحظر' : 'Unban') : (ar ? 'حظر' : 'Ban')}
+            </button>
+            <button class="btn" onclick="deleteUser(${user.id})" style="padding:6px 14px;font-size:0.82rem;background:#e74c3c;color:white">
+              <i class="fas fa-trash"></i> ${ar ? 'حذف' : 'Delete'}
+            </button>
+          </div>
+        </div>`).join('');
+    }
+ 
+    function toggleSuspend(id) {
+      const users = getUsers();
+      const user = users.find(u => u.id === id);
+      if (!user) return;
+      const ar = isAr();
+      user.suspended = !user.suspended;
+      saveUsers(users);
+      const currentUser = getCurrentUser();
+      if (currentUser && currentUser.id === id && user.suspended) logoutUser();
+      loadAdminUsers();
+      showToast(user.suspended ? (ar ? '⏸️ تم الإيقاف!' : '⏸️ Suspended!') : (ar ? '▶️ تم إلغاء الإيقاف!' : '▶️ Unsuspended!'), 'success');
+    }
+ 
+    function deleteUser(id) {
+      const ar = isAr();
+      openDeleteModal(ar ? 'هل أنت متأكد من حذف هذا المستخدم؟' : 'Are you sure you want to delete this user?', () => {
+        const users = getUsers().filter(u => u.id !== id);
+        saveUsers(users); loadAdminUsers(); loadAdminPanel();
+        showToast(ar ? 'تم حذف المستخدم!' : 'User deleted!', 'success');
+      });
+    }
+ 
+    async function searchGutenberg() {
+      const query = document.getElementById('gutenbergSearch').value.trim();
+      if (!query) return;
+      const ar = isAr();
+      const resultsDiv = document.getElementById('gutenbergResults');
+      resultsDiv.innerHTML = `<p style="color:var(--brown)">${ar ? 'جاري البحث...' : 'Searching...'}</p>`;
+      try {
+        const res = await fetch(`https://gutendex.com/books/?search=${encodeURIComponent(query)}&languages=en`);
+        const data = await res.json();
+        if (!data.results.length) { resultsDiv.innerHTML = `<p>${ar ? 'لا توجد نتائج.' : 'No results found.'}</p>`; return; }
+        resultsDiv.innerHTML = data.results.map(book => {
+          const title = book.title;
+          const author = book.authors[0]?.name || 'Unknown';
+          const cover = book.formats['image/jpeg'] || '';
+          const epub = book.formats['application/epub+zip'] || '';
+          return `<div style="display:flex;align-items:center;gap:16px;padding:12px;border-bottom:1px solid var(--cream3);background:#fff;border-radius:8px;margin-bottom:8px;">
+            <img src="${cover}" style="width:50px;height:70px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none'"/>
+            <div style="flex:1;"><strong style="color:var(--brown-dark)">${title}</strong><p style="font-size:0.85rem;color:var(--brown);margin:2px 0">${author}</p></div>
+            <button class="btn btn-primary" style="font-size:0.8rem;padding:8px 14px;" onclick='importGutenbergBook(${JSON.stringify({title, author, cover, epub})})'>
+              <i class="fas fa-download"></i> ${ar ? 'استيراد' : 'Import'}
+            </button></div>`;
+        }).join('');
+      } catch(e) { resultsDiv.innerHTML = `<p style="color:red">${isAr() ? 'خطأ في الاتصال.' : 'Error fetching results.'}</p>`; }
+    }
+ 
+    function importGutenbergBook(book) {
+      const ar = isAr();
+      const books = getBooks();
+      const authors = getAuthors();
+      let author = authors.find(a => a.name.toLowerCase() === book.author.toLowerCase());
+      if (!author) {
+        author = { id: Date.now(), name: book.author, photo: '', bio: '', addedDate: new Date().toLocaleString() };
+        authors.push(author); saveAuthors(authors);
+      }
+      const newBook = { id: Date.now() + 1, title: book.title, authorId: author.id, authorName: author.name, category: 'Classic', cover: book.cover, pdf: book.epub, description: '', featured: false, downloads: 0, addedDate: new Date().toLocaleString() };
+      books.push(newBook); saveBooks(books);
+      showToast(ar ? `تم استيراد "${book.title}" بنجاح! ✅` : `"${book.title}" imported successfully! ✅`, 'success');
+      loadAdminPanel();
+    }
+ 
+    let currentBanUserId = null;
+ 
+    function openBanModal(userId) {
+      currentBanUserId = userId;
+      ['banByHoursBtn','banByDateBtn'].forEach(id => document.getElementById(id).classList.remove('selected'));
+      document.getElementById('hoursSection').style.display = 'none';
+      document.getElementById('dateSection').style.display = 'none';
+      document.getElementById('banConfirmBtn').style.display = 'none';
+      document.getElementById('banHoursInput').value = '';
+      document.getElementById('banDateInput').value = '';
+      document.getElementById('banModalOverlay').classList.add('active');
+    }
+ 
+    function closeBanModal() {
+      document.getElementById('banModalOverlay').classList.remove('active');
+      currentBanUserId = null;
+    }
+ 
+    function selectBanType(type) {
+      document.getElementById('banByHoursBtn').classList.toggle('selected', type === 'hours');
+      document.getElementById('banByDateBtn').classList.toggle('selected', type === 'date');
+      document.getElementById('hoursSection').style.display = type === 'hours' ? 'flex' : 'none';
+      document.getElementById('dateSection').style.display = type === 'date' ? 'flex' : 'none';
+      document.getElementById('banConfirmBtn').style.display = 'flex';
+    }
+ 
+    function confirmBan() {
+      const hoursVal = document.getElementById('banHoursInput').value;
+      const dateVal = document.getElementById('banDateInput').value;
+      const ar = isAr();
+      if (document.getElementById('hoursSection').style.display !== 'none' && !hoursVal) { alert(ar ? 'يرجى إدخال عدد الساعات!' : 'Please enter number of hours!'); return; }
+      if (document.getElementById('dateSection').style.display !== 'none' && !dateVal) { alert(ar ? 'يرجى اختيار تاريخ!' : 'Please select a date!'); return; }
+      let users = JSON.parse(localStorage.getItem('users') || '[]');
+      const idx = users.findIndex(u => u.id === currentBanUserId || u.email === currentBanUserId);
+      if (idx === -1) { alert(ar ? 'المستخدم غير موجود!' : 'User not found!'); return; }
+      if (hoursVal) { users[idx].banned = true; users[idx].banUntil = new Date(Date.now() + hoursVal * 3600000).toISOString(); }
+      else { users[idx].banned = true; users[idx].banUntil = new Date(dateVal).toISOString(); }
+      localStorage.setItem('users', JSON.stringify(users));
+      closeBanModal();
+      showToast(ar ? 'تم حظر المستخدم بنجاح!' : 'User banned successfully!', 'success');
+      loadAdminUsers();
+    }
+ 
+    let deleteCallback = null;
+ 
+    function openDeleteModal(message, callback) {
+      deleteCallback = callback;
+      document.getElementById('deleteModalMessage').textContent = message;
+      document.getElementById('deleteModalOverlay').classList.add('active');
+    }
+ 
+    function closeDeleteModal() {
+      document.getElementById('deleteModalOverlay').classList.remove('active');
+      deleteCallback = null;
+    }
+ 
+    function confirmDelete() {
+      if (deleteCallback) deleteCallback();
+      closeDeleteModal();
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+    loadTheme();
+    loadLang();
+    onDataReady(() => {
+      updateNavbar();
+      updateFooter();
+      applyAdminLang();
+      renderTabs();
+
+      if (isAdminLoggedIn()) {
+        document.getElementById('adminLoginSection').style.display = 'none';
+        document.getElementById('adminPanelSection').style.display = 'block';
+        loadAdminPanel();
+      }
+
+      const hash = window.location.hash.replace('#', '');
+      if (hash && isAdminLoggedIn()) {
+        const validTabs = ['add-book', 'manage-books', 'add-author', 'manage-authors', 'manage-users', 'stats'];
+        if (validTabs.includes(hash)) showTab(hash);
+      }
+    });
+});
+
+function handleImageUpload(input, targetId, maxW, maxH) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) { showToast('Image must be less than 2MB!', 'error'); return; }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          let w = img.width, h = img.height;
+          if (w > maxW || h > maxH) {
+            const ratio = Math.min(maxW / w, maxH / h);
+            w = Math.round(w * ratio);
+            h = Math.round(h * ratio);
+          }
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          document.getElementById(targetId).value = dataUrl;
+          const preview = document.getElementById(targetId + 'Preview');
+          if (preview) { preview.src = dataUrl; preview.style.display = 'block'; }
+          showToast('Image uploaded! ✅', 'success');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function calculateAge(dob) {
+     const birth = new Date(dob);
+     const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+     const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+      return age;
+      }
+
+  </script>
+ 
+  <!-- BAN MODAL -->
+  <div class="ban-modal-overlay" id="banModalOverlay" onclick="closeBanModal()">
+    <div class="ban-modal" onclick="event.stopPropagation()">
+      <div class="ban-modal-header">
+        <h3>🚫 <span id="banModalTitle">Ban User</span></h3>
+        <button class="ban-modal-close" onclick="closeBanModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <p class="ban-modal-subtitle" id="banModalSubtitle">Choose how long to ban this user:</p>
+      <div class="ban-options">
+        <button class="ban-option-btn" id="banByHoursBtn" onclick="selectBanType('hours')">
+          <i class="fas fa-clock"></i>
+          <span id="banByHoursLabel">Ban by Hours</span>
+          <p id="banByHoursDesc">Auto-removes after set hours</p>
+        </button>
+        <button class="ban-option-btn" id="banByDateBtn" onclick="selectBanType('date')">
+          <i class="fas fa-calendar"></i>
+          <span id="banByDateLabel">Ban by Date</span>
+          <p id="banByDateDesc">Auto-removes on specific date</p>
+        </button>
+      </div>
+      <div class="ban-input-section" id="hoursSection" style="display:none;">
+        <label id="hoursLabel">Number of hours:</label>
+        <input type="number" id="banHoursInput" placeholder="e.g. 24" min="1" max="8760"/>
+      </div>
+      <div class="ban-input-section" id="dateSection" style="display:none;">
+        <label id="dateLabel">Ban until date:</label>
+        <input type="date" id="banDateInput"/>
+      </div>
+      <div class="ban-modal-footer">
+        <button class="ban-cancel-btn" onclick="closeBanModal()" id="banCancelBtn">Cancel</button>
+        <button class="ban-confirm-btn" id="banConfirmBtn" onclick="confirmBan()" style="display:none;">
+          <i class="fas fa-ban"></i> <span id="banConfirmText">Confirm Ban</span>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- DELETE MODAL -->
+  <div class="ban-modal-overlay" id="deleteModalOverlay" onclick="closeDeleteModal()">
+    <div class="ban-modal" onclick="event.stopPropagation()">
+      <div class="ban-modal-header">
+        <h3>🗑️ <span id="deleteModalTitle">Delete</span></h3>
+        <button class="ban-modal-close" onclick="closeDeleteModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <p class="ban-modal-subtitle" id="deleteModalMessage">Are you sure you want to delete this?</p>
+      <div class="ban-modal-footer">
+        <button class="ban-cancel-btn" onclick="closeDeleteModal()" id="deleteCancelBtn">No, Cancel</button>
+        <button class="ban-confirm-btn" onclick="confirmDelete()" style="background:#c0392b;">
+          <i class="fas fa-trash"></i> <span id="deleteConfirmText">Yes, Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+</body>
+</html>
+ 

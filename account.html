@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account — E-Library</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+ 
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">📚</div>
+      <span class="nav-logo-text">E-Library</span>
+    </a>
+    <div class="nav-search">
+      <i class="fas fa-search nav-search-icon"></i>
+      <input type="text" id="navSearch" placeholder="Search books or authors..."/>
+    </div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></button>
+    <button class="theme-toggle lang-toggle" id="langToggle" onclick="toggleLang()">ع</button>
+    <ul class="nav-links">
+      <li><a href="index.html" data-lang="nav-home">Home</a></li>
+      <li><a href="books.html" data-lang="nav-books">Books</a></li>
+      <li><a href="ai.html" data-lang="nav-ai">AI Assistant</a></li>
+      <li><a href="signin.html" class="btn-signin" id="signInBtn" data-lang="nav-signin">Sign In</a></li>
+      <li><a href="signup.html" class="btn-signup" id="signUpBtn" data-lang="nav-signup">Sign Up</a></li>
+    </ul>
+    <div class="nav-right">
+      <div class="avatar-area" id="avatarArea">
+        <div class="avatar-btn">
+          <img src="" alt="avatar" id="userAvatar" onerror="this.src='https://api.dicebear.com/7.x/thumbs/svg?seed=default'"/>
+        </div>
+        <div class="avatar-dropdown">
+          <div class="avatar-dropdown-header">
+            <p id="dropdownUsername">Username</p>
+            <span id="dropdownEmail">email@example.com</span>
+          </div>
+          <a href="account.html"><i class="fas fa-user"></i> <span data-lang="nav-myaccount">My Account</span></a>
+          <a href="books.html"><i class="fas fa-book"></i> <span data-lang="nav-browse">Browse Books</span></a>
+          <a class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="nav-logout">Log Out</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+ 
+  <!-- PAGE WRAPPER -->
+  <div class="page-wrapper">
+    <div class="account-page" id="accountPage">
+      <div class="loading-spinner"><div class="spinner"></div></div>
+    </div>
+  </div>
+ 
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-admin-controls" id="adminControls">
+      <a href="admin.html#add-book" class="admin-footer-btn"><i class="fas fa-plus"></i> <span data-lang="admin-addbook">Add Book</span></a>
+      <a href="admin.html#manage-books" class="admin-footer-btn"><i class="fas fa-edit"></i> <span data-lang="admin-editbooks">Edit/Delete Books</span></a>
+      <a href="admin.html#add-author" class="admin-footer-btn"><i class="fas fa-user-plus"></i> <span data-lang="admin-addauthor">Add Author</span></a>
+      <a href="admin.html#manage-authors" class="admin-footer-btn"><i class="fas fa-users"></i> <span data-lang="admin-editauthors">Edit/Delete Authors</span></a>
+      <a href="admin.html#manage-users" class="admin-footer-btn"><i class="fas fa-users-cog"></i> <span data-lang="admin-manageusers">Manage Users</span></a>
+      <a class="admin-footer-btn danger" onclick="handleAdminLogout()"><i class="fas fa-sign-out-alt"></i> <span data-lang="admin-logout">Admin Logout</span></a>
+    </div>
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">📚</div>
+          <span class="nav-logo-text">E-Library</span>
+        </a>
+        <p data-lang="footer-tagline">Your personal digital library.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-quicklinks">Quick Links</h4>
+        <a href="index.html" data-lang="nav-home">Home</a>
+        <a href="books.html" data-lang="nav-books">Books</a>
+        <a href="ai.html" data-lang="nav-ai">AI Assistant</a>
+      </div>
+      <div class="footer-col">
+        <h4 data-lang="footer-account">Account</h4>
+        <a href="signin.html" data-lang="nav-signin">Sign In</a>
+        <a href="signup.html" data-lang="footer-createaccount">Create Account</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-lang="footer-copyright">© 2026 E-Library. All rights reserved.</p>
+      <div class="footer-actions" id="footerActions">
+        <a href="admin.html" class="footer-btn footer-btn-outline" id="adminLoginBtn"><i class="fas fa-shield-alt"></i> <span data-lang="footer-adminlogin">Admin Login</span></a>
+        <a href="media.html" class="footer-btn footer-btn-primary"><i class="fas fa-user"></i> <span data-lang="footer-media">My Media Account</span></a>
+      </div>
+    </div>
+  </footer>
+ 
+  <div class="toast" id="toast"></div>
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+ 
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="auth.js"></script>
+  <script src="lang.js"></script>
+  <script src="script.js"></script>
+  <script>
+    let selectedEditAvatar = null;
+ 
+    function loadAccountPage() {
+      const page = document.getElementById('accountPage');
+      const user = getCurrentUser();
+      const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+ 
+      if (!user) {
+        page.innerHTML = `
+          <div class="empty-state" style="padding:100px 20px">
+            <div class="empty-state-icon">🔒</div>
+            <h3>${isAr ? 'يرجى تسجيل الدخول' : 'Please sign in'}</h3>
+            <p>${isAr ? 'يجب تسجيل الدخول لعرض حسابك' : 'You need to be signed in to view your account'}</p>
+            <a href="signin.html" class="btn btn-primary" style="margin-top:20px">${isAr ? 'تسجيل الدخول' : 'Sign In'}</a>
+          </div>`;
+        return;
+      }
+ 
+      selectedEditAvatar = user.avatar;
+      const books = getBooks();
+      const downloadedBooks = books.filter(b => user.downloads && user.downloads.includes(b.id));
+ 
+      page.innerHTML = `
+        <div class="account-container">
+          <div class="account-hero">
+            <div class="account-hero-content">
+              <img src="${user.avatar || 'https://api.dicebear.com/7.x/thumbs/svg?seed=' + user.username}"
+                alt="avatar" class="account-avatar"/>
+              <div class="account-hero-info">
+                <h1>${user.username}</h1>
+                <p>${user.email}</p>
+                <p style="font-size:0.85rem;margin-top:4px;opacity:0.7">${isAr ? 'عضو منذ' : 'Member since'} ${user.joinDate}</p>
+                ${user.dob ? `<p style="font-size:0.85rem;margin-top:4px;opacity:0.7">${isAr ? 'العمر:' : 'Age:'} ${calculateAge(user.dob)} ${isAr ? 'سنة' : 'years old'}</p>` : ''}
+                <div class="account-hero-stats">
+                  <div class="account-stat">
+                    <span>${downloadedBooks.length}</span>
+                    <p>${isAr ? 'تحميل' : 'Downloads'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+ 
+          <div class="account-content">
+            <div class="account-tabs">
+              <button class="account-tab active" onclick="showAccountTab('downloads', this)">
+                <i class="fas fa-download"></i> ${isAr ? 'سجل التحميلات' : 'Download History'}
+              </button>
+              <button class="account-tab" onclick="showAccountTab('edit', this)">
+                <i class="fas fa-edit"></i> ${isAr ? 'تعديل الملف الشخصي' : 'Edit Profile'}
+              </button>
+            </div>
+ 
+            <!-- DOWNLOADS TAB -->
+            <div class="account-tab-content active" id="account-tab-downloads">
+              ${downloadedBooks.length === 0
+                ? `<div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>${isAr ? 'لا توجد تحميلات بعد' : 'No downloads yet'}</h3>
+                    <p>${isAr ? 'ابدأ بتحميل الكتب من مكتبتنا!' : 'Start downloading books from our library!'}</p>
+                    <a href="books.html" class="btn btn-primary" style="margin-top:16px">${isAr ? 'تصفح الكتب' : 'Browse Books'}</a>
+                  </div>`
+                : `<div class="books-grid">${downloadedBooks.map(book => createBookCard(book)).join('')}</div>`}
+            </div>
+ 
+            <!-- EDIT PROFILE TAB -->
+            <div class="account-tab-content" id="account-tab-edit">
+              <div class="account-edit-form">
+ 
+                <h3>${isAr ? 'تغيير الصورة الشخصية' : 'Change Avatar'}</h3>
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap;">
+                  <img id="editSelectedAvatar"
+                    src="${user.avatar || 'https://api.dicebear.com/7.x/thumbs/svg?seed=' + user.username}"
+                    alt="avatar"
+                    style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--brown);"/>
+                  <div>
+                    <label for="editAvatarUpload" class="btn btn-secondary" style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:8px 18px;">
+                      <i class="fas fa-upload"></i> ${isAr ? 'اختر صورة' : 'Choose Photo'}
+                    </label>
+                    <input type="file" id="editAvatarUpload" accept="image/*" style="display:none;" onchange="handleEditAvatarUpload(this)"/>
+                    <p style="font-size:0.78rem;color:var(--text-light);margin-top:6px">
+                      ${isAr ? 'JPG أو PNG أو GIF — الحد الأقصى 2MB' : 'JPG, PNG or GIF — max 2MB'}
+                    </p>
+                  </div>
+                </div>
+ 
+                <h3 style="margin-top:28px">${isAr ? 'تغيير كلمة المرور' : 'Change Password'}</h3>
+                <div class="form-group">
+                  <label>${isAr ? 'كلمة المرور الجديدة' : 'New Password'}</label>
+                  <input type="password" id="newPassword" placeholder="${isAr ? 'أدخل كلمة المرور الجديدة' : 'Enter new password'}"/>
+                </div>
+                <div class="form-group">
+                  <label>${isAr ? 'تأكيد كلمة المرور' : 'Confirm New Password'}</label>
+                  <input type="password" id="confirmNewPassword" placeholder="${isAr ? 'أكد كلمة المرور الجديدة' : 'Confirm new password'}"/>
+                </div>
+                <p class="form-error" id="editError"></p>
+                <p class="form-success" id="editSuccess"></p>
+                <button class="btn btn-primary" onclick="saveProfile()">
+                  <i class="fas fa-save"></i> ${isAr ? 'حفظ التغييرات' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
+ 
+          </div>
+        </div>
+      `;
+    }
+ 
+    function handleEditAvatarUpload(input) {
+      const file = input.files[0];
+      const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) {
+        showToast(isAr ? 'حجم الصورة يجب أن يكون أقل من 2MB!' : 'Image must be less than 2MB!', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedEditAvatar = e.target.result;
+        document.getElementById('editSelectedAvatar').src = selectedEditAvatar;
+        showToast(isAr ? 'تم رفع الصورة! ✅' : 'Avatar uploaded! ✅', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+ 
+    function showAccountTab(tab, btn) {
+      document.querySelectorAll('.account-tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.account-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(`account-tab-${tab}`).classList.add('active');
+      btn.classList.add('active');
+    }
+ 
+    function saveProfile() {
+      const user = getCurrentUser();
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmNewPassword').value;
+      const error = document.getElementById('editError');
+      const success = document.getElementById('editSuccess');
+      const isAr = (localStorage.getItem('lang') || 'en') === 'ar';
+ 
+      error.style.display = 'none';
+      success.style.display = 'none';
+ 
+      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$/;
+      if (newPassword && !passwordRegex.test(newPassword)) {
+      error.textContent = isAr ? 'كلمة المرور يجب أن تكون 8 أحرف على الأقل وتحتوي على حروف وأرقام ورموز!' : 'Password must be at least 8 characters with letters, numbers and symbols!';
+      error.style.display = 'block';
+      return;
+      }
+
+      if (newPassword && newPassword !== confirmPassword) {
+        error.textContent = isAr ? 'كلمتا المرور غير متطابقتين!' : 'Passwords do not match!';
+        error.style.display = 'block';
+        return;
+      }
+ 
+      const users = getUsers();
+      const index = users.findIndex(u => u.id === user.id);
+      if (index === -1) return;
+ 
+      users[index].avatar = selectedEditAvatar;
+      if (newPassword) users[index].password = newPassword;
+ 
+      saveUsers(users);
+      setCurrentUser(users[index]);
+ 
+      success.textContent = isAr ? 'تم تحديث الملف الشخصي بنجاح! ✅' : 'Profile updated successfully! ✅';
+      success.style.display = 'block';
+ 
+      updateNavbar();
+      showToast(isAr ? 'تم التحديث! ✅' : 'Profile updated! ✅', 'success');
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+  loadTheme();
+  loadLang();
+  onDataReady(() => {
+    updateNavbar();
+    updateFooter();
+    loadAccountPage(); 
+  });
+});
+  
+  function calculateAge(dob) {
+    const birth = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+    return age;
+  }
+  </script>
+</body>
+</html>
+ 
