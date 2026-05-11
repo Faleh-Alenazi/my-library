@@ -10,6 +10,7 @@ const firebaseConfig = {
  
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const storage = firebase.storage();
  
 // ===== IN-MEMORY CACHE =====
 let _books = [];
@@ -85,7 +86,7 @@ function saveUsers(users) {
   // Strip large base64 avatars before saving to Firestore (1MB doc limit)
   const cleanUsers = users.map(u => ({
     ...u,
-    avatar: (u.avatar && u.avatar.length > 50000) ? '' : u.avatar
+    avatar: u.avatar || ''
   }));
   db.collection('data').doc('users').set({ items: cleanUsers })
     .catch(e => console.error('Save users error:', e));
