@@ -185,7 +185,7 @@
       reader.readAsDataURL(file);
     }
  
-    function handleSignup() {
+    async function handleSignup() {
       const username = document.getElementById('username').value.trim();
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -215,7 +215,7 @@
       if (password !== confirmPassword) { document.getElementById('confirmError').textContent = isAr ? 'كلمتا المرور غير متطابقتين!' : 'Passwords do not match!'; document.getElementById('confirmError').style.display = 'block'; valid = false; }
       if (!valid) return;
  
-      const result = signupUser(username, email, password, selectedAvatar, dob);
+      const result = await signupUser(username, email, password, selectedAvatar, dob);
       if (result.success) {
         showToast(isAr ? 'تم إنشاء الحساب بنجاح! 🎉' : 'Account created successfully! 🎉', 'success');
         setTimeout(() => window.location.href = 'index.html', 1500);
