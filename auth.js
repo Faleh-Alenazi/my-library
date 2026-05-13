@@ -39,18 +39,17 @@ function onDataReady(callback) {
   _dataPromise.then(callback);
 }
  
-// ===== ADMIN CREDENTIALS (hashed) =====
-const ADMIN_CREDENTIALS = {
-  username: '66616c65685f61646d696e',
-  password: '61646d696e313233'
-};
+const ADMIN_CREDENTIALS = [
+  { username: '66616c65685f61646d696e', password: '61646d696e313233' },
+  { username: '596f6f6e', password: '596f6f6e31323334' }
+];
  
 function toHex(str) {
   return str.split('').map(c => c.charCodeAt(0).toString(16)).join('');
 }
  
 function loginAdmin(username, password) {
-  if (toHex(username) === ADMIN_CREDENTIALS.username && toHex(password) === ADMIN_CREDENTIALS.password) {
+  if (ADMIN_CREDENTIALS.some(a => toHex(username) === a.username && toHex(password) === a.password)) {
     localStorage.setItem('admin_logged_in', 'true');
     return true;
   }
